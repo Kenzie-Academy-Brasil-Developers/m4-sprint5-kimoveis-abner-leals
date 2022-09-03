@@ -1,0 +1,4 @@
+const { subject } = jwt.verify(
+    token,
+    process.env.SECRET_KEY ?? ""
+  ) as jwt.SignOptions;
