@@ -20,11 +20,9 @@ export class Schedules {
   @Column({ type: "time" })
   hour: string;
 
-  @ManyToOne(() => Properties)
-  @JoinColumn()
+  @ManyToOne(() => Properties, { eager: true })
   property: Properties;
 
   @ManyToOne(() => User)
-  @JoinColumn()
   user: User;
 }

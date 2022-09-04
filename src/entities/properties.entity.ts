@@ -37,8 +37,9 @@ export class Properties {
   @JoinColumn()
   address: Addresses;
 
-  @ManyToOne(() => Categories)
-  @JoinColumn()
+  @ManyToOne(() => Categories, (Categories) => Categories.properties, {
+    eager: true,
+  })
   category: Categories;
 
   @OneToMany(() => Schedules, (Schedules) => Schedules.property)

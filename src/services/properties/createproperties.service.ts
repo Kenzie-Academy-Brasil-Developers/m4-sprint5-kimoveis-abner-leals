@@ -3,34 +3,57 @@ import { Addresses } from "../../entities/addresses.entity";
 import { Categories } from "../../entities/categories.entity";
 import { Properties } from "../../entities/properties.entity";
 import { AppError } from "../../error/AppError";
-import { IPropertyRequest } from "../../interfaces/properties";
+import { IAddressRequest, IPropertyRequest } from "../../interfaces/properties";
+import { createAddressService } from "./createAddress.service";
 
-export const createPropertieService = async (
-  property: IPropertyRequest
-): Promise<Properties> => {
+export const createPropertieService = async ({
+  size,
+  value,
+  address,
+  categoryId,
+}: IPropertyRequest) => {
+  const propertyRepository = AppDataSource.getRepository(Properties);
   const addressRepository = AppDataSource.getRepository(Addresses);
-  const categoryRepository = AppDataSource.getRepository(Categories);
-  const propertieRepository = AppDataSource.getRepository(Properties);
+  const categoriesRepository = AppDataSource.getRepository(Categories);
 
-  const address = await addressRepository.findOneBy(property.address);
-  const category = await categoryRepository.findOneBy({
-    id: property.categoryId,
+  let category: any = "";
+
+  category = await categoriesRepository.findOne({
+    where: { id: categoryId },
   });
-
   if (!category) {
-    throw new AppError(
-      " Its not able to create property with invalid categoryId",
-      404
-    );
+    throw new AppError("invalid category", 404);
   }
-  if (address) {
-    throw new AppError(" Address its alredy been used", 400);
+
+  const { city, district, state, zipCode, number }: IAddressRequest = address;
+  if (state.length !== 2 || zipCode.length !== 8)
+    throw new AppError("Estado ou CEP inválido");
+
+  await createAddressService(address);
+
+  const endereco = new Addresses();
+  endereco.city = city;
+  endereco.district = district;
+  endereco.state = state;
+  endereco.zipCode = zipCode;
+  if (number) {
+    endereco.number = number;
   }
-  const addr = addressRepository.create(property.address);
-  const prop = propertieRepository.create({
-    address: addr,
-    category: category,
-  });
-  await propertieRepository.save(prop);
+
+  let enderecoCadastrado: Addresses;
+  try {
+    enderecoCadastrado = await addressRepository.save(endereco);
+  } catch (error) {
+    if (error instanceof Error) throw new AppError(error.message);
+  }
+
+  const newProperty = new Properties();
+  newProperty.size = size;
+  newProperty.value = value;
+  newProperty.address = enderecoCadastrado!;
+  newProperty.category = category!;
+
+  let prop = await propertyRepository.save(newProperty);
+
   return prop;
 };
