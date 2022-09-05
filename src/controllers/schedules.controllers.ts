@@ -28,6 +28,7 @@ export const createSchedulesController = async (
       id: id,
     },
   });
+
   const agenda = await createScheduleService(user!, req.body);
   return res.status(201).json({ message: "schedule created" });
 };
