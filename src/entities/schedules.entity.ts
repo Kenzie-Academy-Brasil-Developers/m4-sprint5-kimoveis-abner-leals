@@ -20,9 +20,9 @@ export class Schedules {
   @Column({ type: "time" })
   hour: string;
 
-  @ManyToOne(() => Properties, { eager: true })
+  @ManyToOne(() => Properties, (prop) => prop.schedules, { eager: true })
   property: Properties;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, (user) => user.schedules, { eager: true })
   user: User;
 }
