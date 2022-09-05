@@ -12,7 +12,7 @@ import { User } from "./users.entity";
 @Entity("schedules_users_properties")
 export class Schedules {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  readonly id: string;
 
   @Column({ type: "date" })
   date: string;

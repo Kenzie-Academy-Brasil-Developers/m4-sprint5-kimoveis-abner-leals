@@ -47,7 +47,7 @@ describe("/schedules", () => {
     await connection.destroy();
   });
 
-  it("POST /schedules -  should be able to create a schedule", async () => {
+  test("POST /schedules -  should be able to create a schedule", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
       .send(mockedAdminLogin);
@@ -69,7 +69,7 @@ describe("/schedules", () => {
     expect(response.status).toBe(201);
   });
 
-  it("POST /schedules -  should not be able to create a schedule that already exists", async () => {
+  test("POST /schedules -  should not be able to create a schedule that already exists", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
       .send(mockedAdminLogin);
@@ -91,7 +91,7 @@ describe("/schedules", () => {
     expect(response.status).toBe(400);
   });
 
-  it("POST /schedules -  should not be able to create a schedule with an invalid date", async () => {
+  test("POST /schedules -  should not be able to create a schedule with an invalid date", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
       .send(mockedAdminLogin);
@@ -113,7 +113,7 @@ describe("/schedules", () => {
     expect(response.status).toBe(400);
   });
 
-  it("POST /schedules -  should not be able to create a schedule with an invalid hour", async () => {
+  test("POST /schedules -  should not be able to create a schedule with an invalid hour", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
       .send(mockedAdminLogin);
@@ -135,7 +135,7 @@ describe("/schedules", () => {
     expect(response.status).toBe(400);
   });
 
-  it("POST /schedules -  should not be able to create a schedule with an invalid property id", async () => {
+  test("POST /schedules -  should not be able to create a schedule with an invalid property id", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
       .send(mockedAdminLogin);
@@ -155,7 +155,7 @@ describe("/schedules", () => {
     expect(response.status).toBe(404);
   });
 
-  it("POST /schedules -  should not be able to create a schedule without authentication", async () => {
+  test("POST /schedules -  should not be able to create a schedule without authentication", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
       .send(mockedAdminLogin);
@@ -171,7 +171,7 @@ describe("/schedules", () => {
     expect(response.status).toBe(401);
   });
 
-  it("GET /schedules/properties/:id -  must be able to list the schedules of a property", async () => {
+  test("GET /schedules/properties/:id -  must be able to list the schedules of a property", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
       .send(mockedAdminLogin);
@@ -189,7 +189,7 @@ describe("/schedules", () => {
     expect(response.status).toBe(200);
   });
 
-  it("GET /schedules/properties/:id -  should not be able to list the schedules of a property with invalid id", async () => {
+  test("GET /schedules/properties/:id -  should not be able to list the schedules of a property with invalid id", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
       .send(mockedAdminLogin);
@@ -201,7 +201,7 @@ describe("/schedules", () => {
     expect(response.status).toBe(404);
   });
 
-  it("GET /schedules/properties/:id -  should not be able to list the schedules of a property without authentication", async () => {
+  test("GET /schedules/properties/:id -  should not be able to list the schedules of a property without authentication", async () => {
     const properties = await request(app).get("/properties");
     const response = await request(app).get(
       `/schedules/properties/${properties.body[0].id}`
@@ -211,7 +211,7 @@ describe("/schedules", () => {
     expect(response.status).toBe(401);
   });
 
-  it("GET /schedules/properties/:id -  should not be able to list the schedules of a property that the user is not admin", async () => {
+  test("GET /schedules/properties/:id -  should not be able to list the schedules of a property that the user is not admin", async () => {
     const userLoginResponse = await request(app)
       .post("/login")
       .send(mockedUserLogin);
